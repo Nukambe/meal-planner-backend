@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 
-import { meals } from 'src/sample-meals';
+// import { meals } from 'src/sample-meals';
 
 @Injectable()
 export class RecipesService {
@@ -15,7 +15,7 @@ export class RecipesService {
   // }
 
   findOne(id: number) {
-    return meals.find((meal) => meal.id === id)?.recipe || 'Recipe not found';
+    return 'This action returns a #${id} recipe';
   }
 
   update(id: number, updateRecipeDto: UpdateRecipeDto) {
