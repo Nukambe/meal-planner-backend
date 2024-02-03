@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
-// import { meals } from 'src/sample-meals';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom, map as rxjsMap } from 'rxjs';
 import { Meal } from 'meal-planner-types';
