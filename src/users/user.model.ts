@@ -1,4 +1,4 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { Column, Model, Table, DataType } from 'sequelize-typescript';
 
 @Table
 export class User extends Model {
@@ -7,4 +7,7 @@ export class User extends Model {
 
   @Column
   password: string;
+
+  @Column(DataType.JSON)
+  plan: any;
 }

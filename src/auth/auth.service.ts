@@ -13,11 +13,7 @@ export class AuthService {
   ) {}
 
   async signIn(username: string, pw: string) {
-    console.log('username:', username);
-    console.log('pw:', pw);
     const user = await this.usersService.findOneByUsername(username);
-    console.log('user:', user);
-    console.log('user pw', user.password);
     const authorized = await compare(pw, user?.password);
 
     if (!authorized) throw new UnauthorizedException();
