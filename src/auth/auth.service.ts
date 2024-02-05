@@ -1,14 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UsersService } from 'src/users/users.service';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { MealsService } from 'src/meals/meals.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
+    private mealsService: MealsService,
     private jwtService: JwtService,
   ) {}
 
@@ -19,6 +19,13 @@ export class AuthService {
     if (!authorized) throw new UnauthorizedException();
 
     const payload = { username: user.username, sub: user.id };
-    return { access_token: await this.jwtService.signAsync(payload) };
+
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      username: user.username,
+      plan: user.plan,
+      templates: user.templates,
+      meals: await this.mealsService.getMealsFromDb(),
+    };
   }
 }

@@ -28,7 +28,7 @@ export class Meal extends Model {
     amount: number;
     unit: string;
   }[];
-  @Column
+  @Column(DataType.TEXT)
   summary: string;
   @Column(DataType.JSON)
   cuisines: string[];

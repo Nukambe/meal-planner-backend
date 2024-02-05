@@ -16,7 +16,6 @@ export class MealPlanService {
       attributes: ['plan'],
     });
     const plan = user?.dataValues.plan;
-    console.log('plan', plan);
     if (!plan) {
       const mealPlan = new MealPlan([], []);
       return mealPlan;
@@ -28,7 +27,6 @@ export class MealPlanService {
     if (mealPlan) {
       const user = await this.userModel.findByPk(id);
       await user.update({ plan: mealPlan });
-      console.log(user.dataValues.plan);
       return user.dataValues.plan;
     }
   }

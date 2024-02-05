@@ -10,5 +10,6 @@ import { Meal } from './meal.model';
   controllers: [MealsController],
   providers: [MealsService],
   imports: [RecipesModule, HttpModule, SequelizeModule.forFeature([Meal])],
+  exports: [MealsService],
 })
 export class MealsModule {}

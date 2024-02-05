@@ -10,4 +10,7 @@ export class User extends Model {
 
   @Column(DataType.JSON)
   plan: any;
+
+  @Column(DataType.JSON)
+  templates: any;
 }

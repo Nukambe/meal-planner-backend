@@ -8,7 +8,7 @@ export class MealsController {
 
   @Get()
   @UseFilters(SpoonException) // Return cached meals if the API call fails
-  findAll(
+  async findAll(
     @Query('number') number: string,
     @Query('sort') sort: string,
     @Query('offset') offset: string,
@@ -30,5 +30,10 @@ export class MealsController {
       { min: +minFat || 0, max: +maxFat || 1000 },
       { min: +minProtein || 0, max: +maxProtein || 1000 },
     );
+  }
+
+  @Get('db')
+  async db() {
+    return this.mealsService.getMealsFromDb();
   }
 }

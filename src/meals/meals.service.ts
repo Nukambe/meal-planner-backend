@@ -2,11 +2,35 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom, map as rxjsMap } from 'rxjs';
 import { Meal } from 'meal-planner-types';
+import { Meal as MealModel } from './meal.model';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class MealsService {
-  db: { [key: number]: Meal } = {};
-  constructor(private readonly http: HttpService) {}
+  nutrients: string[] = [
+    'Calories',
+    'Carbohydrates',
+    'Fat',
+    'Protein',
+    'Saturated Fat',
+    'Net Carbohydrates',
+    'Sugar',
+    'Cholesterol',
+    'Sodium',
+    'Fiber',
+  ];
+  constructor(
+    private readonly http: HttpService,
+    @InjectModel(MealModel) private readonly mealModel: typeof MealModel,
+  ) {}
+
+  async getMealsByIds(ids: number[]) {
+    return await this.mealModel.findAll({ where: { mealId: ids } });
+  }
+
+  async getMealsFromDb() {
+    return await this.mealModel.findAll();
+  }
 
   async findAll(
     number = 9,
@@ -17,6 +41,7 @@ export class MealsService {
     fat = { min: 0, max: 1000 },
     protein = { min: 0, max: 1000 },
   ): Promise<any> {
+    const db = await this.mealModel.findAll();
     const meals = await firstValueFrom(
       this.http
         .get(
@@ -28,10 +53,12 @@ export class MealsService {
         .pipe(
           rxjsMap((res) => {
             return res.data.results.map((recipe) => {
-              const cached = this.db[recipe.id];
-              if (cached) {
-                console.log(`Found cached meal ${cached.title}`);
-                return cached;
+              const dbMeal = db.find(
+                (meal) => meal.dataValues.mealId === recipe.id,
+              );
+              if (dbMeal) {
+                console.log('returning from db');
+                return dbMeal;
               }
               const meal: Meal = {
                 id: recipe.id,
@@ -40,7 +67,9 @@ export class MealsService {
                 servings: recipe.servings,
                 image: recipe.image,
                 imageType: recipe.imageType,
-                nutrients: recipe.nutrition.nutrients,
+                nutrients: recipe.nutrition.nutrients.filter((nutrient) =>
+                  this.nutrients.includes(nutrient.name),
+                ),
                 ingredients: recipe.nutrition.ingredients.map((ingredient) => ({
                   id: ingredient.id,
                   name: ingredient.name,
@@ -55,16 +84,35 @@ export class MealsService {
                   (step) => ({ number: step.number, step: step.step }),
                 ),
               };
-              this.db[recipe.id] = meal;
+              this.saveMeal(meal);
               return meal;
             });
           }),
           catchError((err) => {
             console.log(err);
-            return Object.values(this.db);
+            return db;
           }),
         ),
     );
     return meals;
+  }
+
+  async saveMeal(meal: Meal) {
+    this.mealModel.create({
+      id: meal.id,
+      mealId: meal.id,
+      title: meal.title,
+      readyInMinutes: meal.readyInMinutes,
+      servings: meal.servings,
+      image: meal.image,
+      imageType: meal.imageType,
+      nutrients: meal.nutrients,
+      ingredients: meal.ingredients,
+      summary: meal.summary,
+      cuisines: meal.cuisines,
+      dishTypes: meal.dishTypes,
+      diets: meal.diets,
+      instructions: meal.instructions,
+    });
   }
 }
