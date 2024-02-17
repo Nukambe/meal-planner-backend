@@ -8,11 +8,12 @@ export class ApiGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
+
     if (request.headers['mp-api-key'] !== process.env.API_KEY) {
       console.log('API key is incorrect');
       return false;
     }
-    console.log('API key is correct');
+    console.log('API key is correct ');
     return true;
   }
 }

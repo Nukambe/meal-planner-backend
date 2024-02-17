@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MealsModule } from './meals/meals.module';
-import { CategoriesModule } from './categories/categories.module';
 import { MealPlanModule } from './meal-plan/meal-plan.module';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -13,7 +12,6 @@ import { TemplatesModule } from './templates/templates.module';
 @Module({
   imports: [
     MealsModule,
-    CategoriesModule,
     MealPlanModule,
     ConfigModule.forRoot(),
     SequelizeModule.forRoot({
