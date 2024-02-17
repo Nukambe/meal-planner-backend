@@ -1,20 +1,16 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
-  Param,
-  Delete,
   UseGuards,
   Request,
   HttpCode,
 } from '@nestjs/common';
 import { MealPlanService } from './meal-plan.service';
-import { CreateMealPlanDto } from './dto/create-meal-plan.dto';
-import { UpdateMealPlanDto } from './dto/update-meal-plan.dto';
+// import { CreateMealPlanDto } from './dto/create-meal-plan.dto';
+// import { UpdateMealPlanDto } from './dto/update-meal-plan.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { MealPlan } from 'meal-planner-types';
 
 @Controller('meal-plan')
 export class MealPlanController {
@@ -23,7 +19,6 @@ export class MealPlanController {
   @UseGuards(AuthGuard)
   @Get()
   getMealPlan(@Request() req) {
-    console.log('req.user', req.user);
     const id = req.user.sub;
     return this.mealPlanService.getMealPlan(id);
   }

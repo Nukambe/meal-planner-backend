@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
+// import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { Sequelize } from 'sequelize-typescript';
@@ -12,8 +12,8 @@ export class UsersService {
     private sequelize: Sequelize,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(username: string, password: string, plan: any, templates: any) {
+    return await this.userModel.create({ username, password, plan, templates });
   }
 
   async findAll(): Promise<User[]> {
@@ -29,9 +29,9 @@ export class UsersService {
     return user.dataValues;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+  // async update(id: number, updateUserDto: UpdateUserDto) {
+  //   return `This action updates a #${id} user`;
+  // }
 
   async remove(id: number): Promise<void> {
     await this.userModel.destroy({ where: { id } });

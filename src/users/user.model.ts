@@ -2,10 +2,10 @@ import { Column, Model, Table, DataType } from 'sequelize-typescript';
 
 @Table
 export class User extends Model {
-  @Column
+  @Column({ unique: true, allowNull: false })
   username: string;
 
-  @Column
+  @Column({ allowNull: false })
   password: string;
 
   @Column(DataType.JSON)

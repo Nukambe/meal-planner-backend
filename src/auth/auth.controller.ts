@@ -1,10 +1,10 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   HttpCode,
   HttpStatus,
+  Get,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -21,9 +21,18 @@ export class AuthController {
     return this.authService.signIn(credentials.username, credentials.password);
   }
 
+  @HttpCode(HttpStatus.CREATED)
+  @Post('signup')
+  signUp(@Body() body: Record<string, string>) {
+    const { username, password, plan, templates } = body;
+    return this.authService.signUp(username, password, plan, templates);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
-  @Get('meal-plan')
-  getMealPlan(@Request() req) {
-    return req.user;
+  @Get('user')
+  getUser(@Request() req) {
+    const username = req.user.username;
+    return this.authService.restoreUser(username);
   }
 }

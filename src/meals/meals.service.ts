@@ -57,7 +57,6 @@ export class MealsService {
                 (meal) => meal.dataValues.mealId === recipe.id,
               );
               if (dbMeal) {
-                console.log('returning from db');
                 return dbMeal;
               }
               const meal: Meal = {

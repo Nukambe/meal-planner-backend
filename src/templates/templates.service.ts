@@ -10,7 +10,6 @@ export class TemplatesService {
     const user = await this.userModel.findByPk(id, {
       ['attributes']: ['templates'],
     });
-    console.log(user?.dataValues.templates);
     const templates = user?.dataValues.templates;
     if (!templates) {
       user.update({ templates: [] });

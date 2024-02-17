@@ -15,9 +15,17 @@ export class SpoonException extends BaseExceptionFilter {
   }
 
   async catch(exception: HttpException, host: ArgumentsHost) {
+    const status = exception.getStatus();
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    if (status === 403) {
+      return response.status(403).json({
+        message: 'Forbidden resource',
+        error: 'Forbidden',
+        statusCode: 403,
+      });
+    }
     const db = await this.mealModel.findAll();
-    response.status(200).json(db);
+    return response.status(200).json(db);
   }
 }
