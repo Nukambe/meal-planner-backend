@@ -12,6 +12,6 @@ async function bootstrap() {
   app.useGlobalGuards(new ApiGuard());
   app.use(helmet());
   app.enableCors();
-  await app.listen(3005);
+  await app.listen(3000);
 }
 bootstrap();
